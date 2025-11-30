@@ -10,7 +10,7 @@ export default function VerifyResetOTP() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
 
-  const verify = async (e) => {
+  const verify = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     const res = await fetch("/api/auth/verify-reset-otp", {

@@ -9,7 +9,7 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
 
-  const reset = async (e) => {
+  const reset = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     const res = await fetch("/api/auth/reset-password", {
