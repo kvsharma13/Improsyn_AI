@@ -95,7 +95,7 @@ export default function AgentPage() {
       {/* Bot iFrame */}
       <div className="flex-1 relative">
         <iframe
-          src={process.env.NEXT_PUBLIC_LIVEKIT_BOT_URL || 'https://improsyn-5syt4v.sandbox.livekit.io'}
+          src={process.env.NEXT_PUBLIC_LIVEKIT_BOT_URL || 'https://pharmedbot-2vryvh.sandbox.livekit.io'}
           className="absolute inset-0 w-full h-full border-0"
           allow="microphone; camera; autoplay"
           title="Improsyn AI Voice Agent"

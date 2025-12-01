@@ -1,22 +1,29 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function VerifyEmailPage() {
+  const [otp, setOtp] = useState('')
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const email = searchParams.get('email') || ''
 
-  const [otp, setOtp] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    const emailParam = searchParams.get('email')
+    if (emailParam) setEmail(emailParam)
+    else router.push('/')
+  }, [searchParams, router])
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    if (otp.length !== 6) {
+      setError('Please enter a 6-digit code')
+      return
+    }
     setLoading(true)
-
     try {
       const response = await fetch('/api/auth/verify-otp', {
         method: 'POST',
@@ -24,71 +31,73 @@ export default function VerifyEmailPage() {
         credentials: 'include',
         body: JSON.stringify({ email, otp }),
       })
-
       const data = await response.json()
-
       if (data.success) {
-        router.push('/agent')
+        setSuccess('Verified! Redirecting...')
+        setTimeout(() => router.push('/agent'), 2000)
       } else {
         setError(data.message)
       }
     } catch (err) {
-      setError('Network error. Try again.')
+      setError('Network error')
     } finally {
       setLoading(false)
     }
   }
 
+  const handleResend = async () => {
+    try {
+      const response = await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await response.json()
+      if (data.success) setSuccess('New code sent! Check console.')
+      else setError(data.message)
+    } catch (err) {
+      setError('Network error')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
-        
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-white text-center mb-2">
-          Verify Email
-        </h1>
-        <p className="text-gray-400 text-center mb-6">
-          Enter the OTP sent to <span className="text-white font-semibold">{email}</span>
-        </p>
-
-        <form onSubmit={handleVerify} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              OTP Code
-            </label>
-            <input
-              type="text"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              maxLength={6}
-              placeholder="Enter 6-digit OTP"
-              required
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pharmed-blue focus:border-transparent"
-            />
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded-lg text-sm">
-              {error}
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Verify Email</h1>
+          <p className="text-gray-400">Enter code from server console</p>
+          <p className="text-pharmed-blue font-medium mt-2">{email}</p>
+        </div>
+        <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
+          <form onSubmit={handleVerify} className="space-y-6">
+            <div>
+              <input
+                type="text"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="000000"
+                maxLength={6}
+                required
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white text-center text-2xl tracking-widest"
+              />
+              <p className="mt-1 text-xs text-gray-400 text-center">Expires in 10 minutes</p>
             </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-pharmed-blue hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-          >
-            {loading ? 'Verifying...' : 'Verify'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-400 mt-6">
-          Didn’t receive the code?
-          <span className="text-pharmed-blue hover:underline ml-1 cursor-pointer">
-            Resend OTP
-          </span>
-        </p>
+            {error && <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded-lg text-sm">{error}</div>}
+            {success && <div className="bg-green-900/50 border border-green-500 text-green-200 px-4 py-3 rounded-lg text-sm">{success}</div>}
+            <button type="submit" disabled={loading || otp.length !== 6} className="w-full bg-pharmed-blue hover:bg-blue-600 text-white font-semibold py-3 rounded-lg">
+              {loading ? 'Verifying...' : 'Verify Email'}
+            </button>
+          </form>
+          <div className="mt-6 text-center">
+            <button onClick={handleResend} className="text-pharmed-blue hover:underline text-sm">Resend Code</button>
+          </div>
+          <div className="mt-4 text-center">
+            <button onClick={() => router.push('/')} className="text-sm text-gray-400 hover:text-white">← Back to Login</button>
+          </div>
+        </div>
+        <div className="mt-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <p className="text-sm text-yellow-400">📋 Check terminal for OTP</p>
+        </div>
       </div>
     </div>
   )
