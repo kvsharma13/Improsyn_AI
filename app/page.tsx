@@ -234,7 +234,7 @@ export default function Home() {
         </div>
 
         <div className="mt-6 text-center text-sm text-gray-500">
-          <p>✉️ Email verification required • Console OTP</p>
+          <p>✉️ Email verification required</p>
         </div>
       </div>
     </div>
