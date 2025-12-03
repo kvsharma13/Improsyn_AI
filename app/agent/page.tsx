@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function AgentPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -69,11 +70,14 @@ export default function AgentPage() {
       <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex-shrink-0">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <circle cx="30" cy="30" r="25" fill="#0066B3" />
-                <ellipse cx="55" cy="30" rx="35" ry="30" fill="#C0C0C0" opacity="0.7" />
-              </svg>
+            <div className="w-12 h-12">
+              <Image 
+                src="/Pharmed_logo copy.png"
+                alt="Pharmed Logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Improsyn AI</h1>

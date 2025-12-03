@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Home() {
   const [isLogin, setIsLogin] = useState(true)
@@ -78,16 +79,15 @@ export default function Home() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <div className="bg-white rounded-full p-6 shadow-xl">
-              <div className="w-24 h-24 relative">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <circle cx="30" cy="30" r="25" fill="#0066B3" />
-                  <ellipse cx="55" cy="30" rx="35" ry="30" fill="#C0C0C0" opacity="0.7" />
-                  <text x="50" y="80" textAnchor="middle" fill="#0066B3" fontSize="16" fontWeight="bold">
-                    PHARMED
-                  </text>
-                </svg>
-              </div>
+            <div className="w-32 h-32">
+              <Image 
+                src="/Pharmed_logo copy.png"
+                alt="Pharmed Logo"
+                width={128}
+                height={128}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Improsyn AI</h1>
@@ -155,7 +155,6 @@ export default function Home() {
                 className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pharmed-blue focus:border-transparent transition-all"
               />
 
-              {/* ⭐ NEW: FORGOT PASSWORD BUTTON */}
               {isLogin && (
                 <div className="text-right mt-2">
                   <button
