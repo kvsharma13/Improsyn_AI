@@ -49,11 +49,21 @@ export function verifyToken(token: string): JWTPayload | null {
 }
 
 /**
- * Validate email format - ACCEPTS ALL DOMAINS
+ * Validate email format - ONLY ACCEPTS pharmed.in and mindmapdigital.ai domains
  */
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
+  
+  // First check if it's a valid email format
+  if (!emailRegex.test(email)) {
+    return false
+  }
+  
+  // Extract domain and check if it's allowed
+  const domain = email.split('@')[1].toLowerCase()
+  const allowedDomains = ['pharmed.in', 'mindmapdigital.ai']
+  
+  return allowedDomains.includes(domain)
 }
 
 /**

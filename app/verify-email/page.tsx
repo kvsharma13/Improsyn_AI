@@ -53,7 +53,7 @@ export default function VerifyEmailPage() {
         body: JSON.stringify({ email }),
       })
       const data = await response.json()
-      if (data.success) setSuccess('New code sent! Check console.')
+      if (data.success) setSuccess('New code sent!')
       else setError(data.message)
     } catch (err) {
       setError('Network error')
@@ -96,7 +96,7 @@ export default function VerifyEmailPage() {
           </div>
         </div>
         <div className="mt-6 bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <p className="text-sm text-yellow-400">📋 Check terminal for OTP</p>
+          <p className="text-sm text-yellow-400">Contact support for OTP</p>
         </div>
       </div>
     </div>

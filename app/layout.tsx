@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Improsyn AI - Pharmed Voice Agent',
-  description: 'Secure AI-powered voice agent platform for Pharmed',
+  description: 'AI-powered voice agent platform for Pharmed',
 }
 
 export default function RootLayout({
